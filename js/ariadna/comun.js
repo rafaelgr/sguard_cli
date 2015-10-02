@@ -7,23 +7,26 @@
 
 function comprobarLogin() {
     // buscar el cookie
-    try{
+    try {
         var user = JSON.parse(getCookie("admin"));
-    }
-    catch(e) {
+    } catch (e) {
         // volver al login
         window.open('login.html', '_self');
     }
-    // cargar el nombre en la zona correspondiente
-    $('#userName').text(user.nombre);
+    if (!user) {
+        window.open('login.html', '_self');
+    } else {
+        // cargar el nombre en la zona correspondiente
+        $('#userName').text(user.nombre);
+    }
+
 }
 
 function comprobarLoginTrabajador() {
     // buscar el cookie
     try {
         var trabajador = JSON.parse(getCookie("trabajador"));
-    }
-    catch (e) {
+    } catch (e) {
         // volver al login
         window.open('login.html', '_self');
     }
@@ -39,7 +42,7 @@ function mostrarMensajeSmart(mens) {
         title: "<i class='fa fa-info'></i> Mensaje",
         content: mens,
         buttons: '[Aceptar]'
-    }, function (ButtonPressed) {
+    }, function(ButtonPressed) {
         if (ButtonPressed === "Aceptar") {
             // no hacemos nada solo queríamos mostrar em mensaje
         }
@@ -51,7 +54,7 @@ function mostrarMensajeSmartSiNo(mens) {
         title: "<i class='fa fa-info'></i> Mensaje",
         content: mens,
         buttons: '[Aceptar][Cancelar]'
-    }, function (ButtonPressed) {
+    }, function(ButtonPressed) {
         if (ButtonPressed === "Aceptar") {
             return 'S';
         }
@@ -61,13 +64,13 @@ function mostrarMensajeSmartSiNo(mens) {
     });
 }
 
-var errorAjax = function (xhr, textStatus, errorThrwon) {
+var errorAjax = function(xhr, textStatus, errorThrwon) {
     var m = xhr.responseText;
     if (!m) m = "Error general posiblemente falla la conexión";
     mostrarMensajeSmart(m);
 }
 
-var errorAjaxSerial = function (xhr) {
+var errorAjaxSerial = function(xhr) {
     var m = xhr.responseText;
     if (!m) m = "Error general posiblemente falla la conexión";
     mostrarMensajeSmart(m);
@@ -86,11 +89,11 @@ function gup(name) {
 }
 
 /*
-*   Set and Get Cookies
-*   this funtions come from http://www.w3schools.com/js/js_cookies.asp
-*   they are used in forms in order to and retrieve
-*   field's values in a cookie
-*/
+ *   Set and Get Cookies
+ *   this funtions come from http://www.w3schools.com/js/js_cookies.asp
+ *   they are used in forms in order to and retrieve
+ *   field's values in a cookie
+ */
 function are_cookies_enabled() {
     var cookieEnabled = (navigator.cookieEnabled) ? true : false;
     if (typeof navigator.cookieEnabled == "undefined" && !cookieEnabled) {
@@ -129,7 +132,7 @@ function getVersionFooter() {
         url: myconfig.apiUrl + "/api/version",
         dataType: "json",
         contentType: "application/json",
-        success: function (data, status) {
+        success: function(data, status) {
             // Regresa el mensaje
             if (!data.version) {
                 mostrarMensaje('No se pudo obtener la versión ');
@@ -138,7 +141,7 @@ function getVersionFooter() {
             $("#versionFooter").text(a);
 
         },
-        error: function (xhr, textStatus, errorThrwon) {
+        error: function(xhr, textStatus, errorThrwon) {
             var m = xhr.responseText;
             if (!m) m = "Error general posiblemente falla la conexión";
             mostrarMensaje(m);

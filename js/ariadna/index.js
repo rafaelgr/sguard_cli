@@ -2,7 +2,7 @@
 var chart = null;
 
 function initForm() {
-    // comprobarLogin();
+    comprobarLogin();
     // de smart admin
     pageSetUp();
     getVersionFooter();

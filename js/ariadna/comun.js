@@ -15,7 +15,7 @@ function comprobarLogin() {
         window.open('login.html', '_self');
     }
     // cargar el nombre en la zona correspondiente
-    $('#userName').text(user.Nombre);
+    $('#userName').text(user.nombre);
 }
 
 function comprobarLoginTrabajador() {

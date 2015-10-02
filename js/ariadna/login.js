@@ -57,19 +57,19 @@ function loginForm() {
         };
         $.ajax({
             type: "POST",
-            url: myconfig.apiUrl + "/api/login",,
+            url: myconfig.apiUrl + "/api/administradores/login",
             dataType: "json",
             contentType: "application/json",
             data: JSON.stringify(data),
             success: function (data, status) {
                 // Regresa el mensaje
-                if (data.length == 0) {
+                if (!data) {
                     mostrarMensaje('Login y/o password incorrectos');
                 } else {
-                    var a = data[0];
+                    var a = data;
                     // guadar el usuario en los cookies
-                    setCookie("trabajador", JSON.stringify(a), 1)
-                    window.open('CliIndex.html', '_self');
+                    setCookie("admin", JSON.stringify(a), 1)
+                    window.open('Index.html', '_self');
                 }
             },
             error: function (xhr, textStatus, errorThrwon) {

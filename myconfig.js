@@ -1,5 +1,5 @@
 ﻿var myconfig = {
-    reportUrl: "https://localhost:8443",
-    apiUrl: "http://localhost:8090",
+    reportUrl: "https://192.168.0.2:8443",
+    apiUrl: "http://192.168.0.2:8090",
     idiomas: ['en','es']
 }

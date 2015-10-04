@@ -1,6 +1,6 @@
 ﻿/*-------------------------------------------------------------------------- 
-administradorGeneral.js
-Funciones js par la página AdministradorGeneral.html
+rondaGeneral.js
+Funciones js par la página RondaGeneral.html
 
 ---------------------------------------------------------------------------*/
 var responsiveHelper_dt_basic = undefined;
@@ -8,8 +8,8 @@ var responsiveHelper_datatable_fixed_column = undefined;
 var responsiveHelper_datatable_col_reorder = undefined;
 var responsiveHelper_datatable_tabletools = undefined;
 
-var dataAdministradores;
-var administradorId;
+var dataRondas;
+var rondaId;
 
 var breakpointDefinition = {
     tablet: 1024,
@@ -23,48 +23,48 @@ function initForm() {
     pageSetUp();
     getVersionFooter();
     //
-    $('#btnBuscar').click(buscarAdministradores());
-    $('#btnAlta').click(crearAdministrador());
+    $('#btnBuscar').click(buscarRondas());
+    $('#btnAlta').click(crearRonda());
     $('#frmBuscar').submit(function () {
         return false
     });
     //$('#txtBuscar').keypress(function (e) {
     //    if (e.keyCode == 13)
-    //        buscarAdministradores();
+    //        buscarRondas();
     //});
     //
-    initTablaAdministradores();
+    initTablaRondas();
     // comprobamos parámetros
-    administradorId = gup('AdministradorId');
-    if (administradorId !== '') {
+    rondaId = gup('RondaId');
+    if (rondaId !== '') {
         // cargar la tabla con un único valor que es el que corresponde.
         var data = {
-            id: administradorId
+            id: rondaId
         }
         // hay que buscar ese elemento en concreto
         $.ajax({
             type: "GET",
-            url: myconfig.apiUrl + "/api/administradores/" + administradorId,
+            url: myconfig.apiUrl + "/api/rondas/" + rondaId,
             dataType: "json",
             contentType: "application/json",
             data: JSON.stringify(data),
             success: function (data, status) {
                 // hay que mostrarlo en la zona de datos
                 var data2 = [data];
-                loadTablaAdministradores(data2);
+                loadTablaRondas(data2);
             },
             error: errorAjax
         });
     }
 }
 
-function initTablaAdministradores() {
-    tablaCarro = $('#dt_administrador').dataTable({
+function initTablaRondas() {
+    tablaCarro = $('#dt_ronda').dataTable({
         autoWidth: true,
         preDrawCallback: function () {
             // Initialize the responsive datatables helper once.
             if (!responsiveHelper_dt_basic) {
-                responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#dt_administrador'), breakpointDefinition);
+                responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#dt_ronda'), breakpointDefinition);
             }
         },
         rowCallback: function (nRow) {
@@ -93,18 +93,14 @@ function initTablaAdministradores() {
                 sortDescending: ": Activar para ordenar la columna de manera descendente"
             }
         },
-        data: dataAdministradores,
+        data: dataRondas,
         columns: [{
             data: "nombre"
         }, {
-            data: "login"
-        }, {
-            data: "email"
-        }, {
-            data: "administradorId",
+            data: "rondaId",
             render: function (data, type, row) {
-                var bt1 = "<button class='btn btn-circle btn-danger btn-lg' onclick='deleteAdministrador(" + data + ");' title='Eliminar registro'> <i class='fa fa-trash-o fa-fw'></i> </button>";
-                var bt2 = "<button class='btn btn-circle btn-success btn-lg' onclick='editAdministrador(" + data + ");' title='Editar registro'> <i class='fa fa-edit fa-fw'></i> </button>";
+                var bt1 = "<button class='btn btn-circle btn-danger btn-lg' onclick='deleteRonda(" + data + ");' title='Eliminar registro'> <i class='fa fa-trash-o fa-fw'></i> </button>";
+                var bt2 = "<button class='btn btn-circle btn-success btn-lg' onclick='editRonda(" + data + ");' title='Editar registro'> <i class='fa fa-edit fa-fw'></i> </button>";
                 var html = "<div class='pull-right'>" + bt1 + " " + bt2 + "</div>";
                 return html;
             }
@@ -132,20 +128,20 @@ function datosOK() {
     return $('#frmBuscar').valid();
 }
 
-function loadTablaAdministradores(data) {
-    var dt = $('#dt_administrador').dataTable();
+function loadTablaRondas(data) {
+    var dt = $('#dt_ronda').dataTable();
     if (data !== null && data.length === 0) {
         mostrarMensajeSmart('No se han encontrado registros');
-        $("#tbAdministrador").hide();
+        $("#tbRonda").hide();
     } else {
         dt.fnClearTable();
         dt.fnAddData(data);
         dt.fnDraw();
-        $("#tbAdministrador").show();
+        $("#tbRonda").show();
     }
 }
 
-function buscarAdministradores() {
+function buscarRondas() {
     var mf = function () {
         if (!datosOK()) {
             return;
@@ -155,12 +151,12 @@ function buscarAdministradores() {
         // enviar la consulta por la red (AJAX)
         $.ajax({
             type: "GET",
-            url: myconfig.apiUrl + "/api/administradores/?nombre=" + aBuscar,
+            url: myconfig.apiUrl + "/api/rondas/?nombre=" + aBuscar,
             dataType: "json",
             contentType: "application/json",
             success: function (data, status) {
                 // hay que mostrarlo en la zona de datos
-                loadTablaAdministradores(data);
+                loadTablaRondas(data);
             },
             error: errorAjax
         });
@@ -168,15 +164,15 @@ function buscarAdministradores() {
     return mf;
 }
 
-function crearAdministrador() {
+function crearRonda() {
     var mf = function () {
-        var url = "AdministradorDetalle.html?AdministradorId=0";
+        var url = "RondaDetalle.html?RondaId=0";
         window.open(url, '_self');
     };
     return mf;
 }
 
-function deleteAdministrador(id) {
+function deleteRonda(id) {
     // mensaje de confirmación
     var mens = "¿Realmente desea borrar este registro?";
     $.SmartMessageBox({
@@ -186,16 +182,16 @@ function deleteAdministrador(id) {
     }, function (ButtonPressed) {
         if (ButtonPressed === "Aceptar") {
             var data = {
-                administradorId: id
+                rondaId: id
             };
             $.ajax({
                 type: "DELETE",
-                url: myconfig.apiUrl + "/api/administradores/" + id,
+                url: myconfig.apiUrl + "/api/rondas/" + id,
                 dataType: "json",
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success: function (data, status) {
-                    var fn = buscarAdministradores();
+                    var fn = buscarRondas();
                     fn();
                 },
                 error: errorAjax
@@ -207,10 +203,10 @@ function deleteAdministrador(id) {
     });
 }
 
-function editAdministrador(id) {
-    // hay que abrir la página de detalle de administrador
+function editRonda(id) {
+    // hay que abrir la página de detalle de ronda
     // pasando en la url ese ID
-    var url = "AdministradorDetalle.html?AdministradorId=" + id;
+    var url = "RondaDetalle.html?RondaId=" + id;
     window.open(url, '_self');
 }
 

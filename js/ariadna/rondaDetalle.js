@@ -1,8 +1,8 @@
 ﻿/*-------------------------------------------------------------------------- 
-administradorDetalle.js
-Funciones js par la página AdministradorDetalle.html
+rondaDetalle.js
+Funciones js par la página RondaDetalle.html
 ---------------------------------------------------------------------------*/
-var adminId = 0; 
+var rondId = 0; 
 function initForm() {
     comprobarLogin();
     // de smart admin
@@ -14,19 +14,19 @@ function initForm() {
     // asignación de eventos al clic
     $("#btnAceptar").click(aceptar());
     $("#btnSalir").click(salir());
-    $("#frmAdministrador").submit(function () {
+    $("#frmRonda").submit(function () {
         return false;
     });
 
-    adminId = gup('AdministradorId');
-    if (adminId != 0) {
+    rondId = gup('RondaId');
+    if (rondId != 0) {
         var data = {
-            administradorId: adminId
+            rondaId: rondId
         }
         // hay que buscar ese elemento en concreto
         $.ajax({
             type: "GET",
-            url: myconfig.apiUrl + "/api/administradores/" + adminId,
+            url: myconfig.apiUrl + "/api/rondas/detalle/" + rondId,
             dataType: "json",
             contentType: "application/json",
             data: JSON.stringify(data),
@@ -38,60 +38,36 @@ function initForm() {
         });
     } else {
         // se trata de un alta ponemos el id a cero para indicarlo.
-        vm.administradorId(0);
+        vm.rondaId(0);
     }
 }
 
 function admData() {
     var self = this;
-    self.administradorId = ko.observable();
+    self.rondaId = ko.observable();
     self.nombre = ko.observable();
-    self.login = ko.observable();
-    self.password = ko.observable();
-    self.email = ko.observable();
 }
 
 function loadData(data) {
-    vm.administradorId(data.administradorId);
+    vm.rondaId(data.rondaId);
     vm.nombre(data.nombre);
-    vm.login(data.login);
-    vm.password(data.password);
-    vm.email(data.email);
 }
 
 function datosOK() {
-    // antes de la validación de form hay que verificar las password
-    if ($('#txtPassword1').val() !== "") {
-        // si ha puesto algo, debe coincidir con el otro campo
-        if ($('#txtPassword1').val() !== $('#txtPassword2').val()) {
-            mostrarMensajeSmart('Las contraseñas no coinciden');
-            return false;
-        }
-        vm.password($("#txtPassword1").val());
-    } 
-    // controlamos que si es un alta debe dar una contraseña.
-    if (vm.administradorId() === 0 && $('#txtPassword1').val() === ""){
-        mostrarMensajeSmart('Debe introducir una contraseña en el alta');
-        return false;
-    }
-    $('#frmAdministrador').validate({
+    $('#frmRonda').validate({
         rules: {
-            txtNombre: { required: true },
-            txtLogin: { required: true },
-            txtEmail: { required: true, email:true }
+            txtNombre: { required: true }
         },
         // Messages for form validation
         messages: {
-            txtNombre: {required: 'Introduzca el nombre'},
-            txtLogin: {required: 'Introduzca el login'},
-            txtEmail: {required: 'Introduzca el correo', email: 'Debe usar un correo válido'}
+            txtNombre: {required: 'Introduzca el nombre'}
         },
         // Do not change code below
         errorPlacement: function (error, element) {
             error.insertAfter(element.parent());
         }
     });
-    return $('#frmAdministrador').valid();
+    return $('#frmRonda').valid();
 }
 
 function aceptar() {
@@ -99,18 +75,15 @@ function aceptar() {
         if (!datosOK())
             return;
         var data = {
-            administrador: {
-                "administradorId": vm.administradorId(),
-                "login": vm.login(),
-                "email": vm.email(),
-                "nombre": vm.nombre(),
-                "password": vm.password()
+            ronda: {
+                "rondaId": vm.rondaId(),
+                "nombre": vm.nombre()
             }
         };
-        if (adminId == 0) {
+        if (rondId == 0) {
             $.ajax({
                 type: "POST",
-                url: myconfig.apiUrl + "/api/administradores",
+                url: myconfig.apiUrl + "/api/rondas",
                 dataType: "json",
                 contentType: "application/json",
                 data: JSON.stringify(data),
@@ -118,7 +91,7 @@ function aceptar() {
                     // hay que mostrarlo en la zona de datos
                     loadData(data);
                     // Nos volvemos al general
-                    var url = "AdministradorGeneral.html?AdministradorId=" + vm.administradorId();
+                    var url = "RondaGeneral.html?RondaId=" + vm.rondaId();
                     window.open(url, '_self');
                 },
                 error: errorAjax
@@ -126,7 +99,7 @@ function aceptar() {
         } else {
             $.ajax({
                 type: "PUT",
-                url: myconfig.apiUrl + "/api/administradores/" + adminId,
+                url: myconfig.apiUrl + "/api/rondas/" + rondId,
                 dataType: "json",
                 contentType: "application/json",
                 data: JSON.stringify(data),
@@ -134,7 +107,7 @@ function aceptar() {
                     // hay que mostrarlo en la zona de datos
                     loadData(data);
                     // Nos volvemos al general
-                    var url = "AdministradorGeneral.html?AdministradorId=" + vm.administradorId();
+                    var url = "RondaGeneral.html?RondaId=" + vm.rondaId();
                     window.open(url, '_self');
                 },
                 error: errorAjax
@@ -146,7 +119,7 @@ function aceptar() {
 
 function salir() {
     var mf = function () {
-        var url = "AdministradorGeneral.html";
+        var url = "RondaGeneral.html";
         window.open(url, '_self');
     }
     return mf;

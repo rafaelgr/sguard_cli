@@ -1,6 +1,6 @@
 ﻿/*-------------------------------------------------------------------------- 
-administradorGeneral.js
-Funciones js par la página AdministradorGeneral.html
+puntoGeneral.js
+Funciones js par la página PuntoGeneral.html
 
 ---------------------------------------------------------------------------*/
 var responsiveHelper_dt_basic = undefined;
@@ -8,8 +8,8 @@ var responsiveHelper_datatable_fixed_column = undefined;
 var responsiveHelper_datatable_col_reorder = undefined;
 var responsiveHelper_datatable_tabletools = undefined;
 
-var dataAdministradores;
-var administradorId;
+var dataPuntos;
+var puntoId;
 
 var breakpointDefinition = {
     tablet: 1024,
@@ -23,48 +23,48 @@ function initForm() {
     pageSetUp();
     getVersionFooter();
     //
-    $('#btnBuscar').click(buscarAdministradores());
-    $('#btnAlta').click(crearAdministrador());
+    $('#btnBuscar').click(buscarPuntos());
+    $('#btnAlta').click(crearPunto());
     $('#frmBuscar').submit(function () {
         return false
     });
     //$('#txtBuscar').keypress(function (e) {
     //    if (e.keyCode == 13)
-    //        buscarAdministradores();
+    //        buscarPuntos();
     //});
     //
-    initTablaAdministradores();
+    initTablaPuntos();
     // comprobamos parámetros
-    administradorId = gup('AdministradorId');
-    if (administradorId !== '') {
+    puntoId = gup('PuntoId');
+    if (puntoId !== '') {
         // cargar la tabla con un único valor que es el que corresponde.
         var data = {
-            id: administradorId
+            id: puntoId
         }
         // hay que buscar ese elemento en concreto
         $.ajax({
             type: "GET",
-            url: myconfig.apiUrl + "/api/administradores/" + administradorId,
+            url: myconfig.apiUrl + "/api/puntos/" + puntoId,
             dataType: "json",
             contentType: "application/json",
             data: JSON.stringify(data),
             success: function (data, status) {
                 // hay que mostrarlo en la zona de datos
                 var data2 = [data];
-                loadTablaAdministradores(data2);
+                loadTablaPuntos(data2);
             },
             error: errorAjax
         });
     }
 }
 
-function initTablaAdministradores() {
-    tablaCarro = $('#dt_administrador').dataTable({
+function initTablaPuntos() {
+    tablaCarro = $('#dt_punto').dataTable({
         autoWidth: true,
         preDrawCallback: function () {
             // Initialize the responsive datatables helper once.
             if (!responsiveHelper_dt_basic) {
-                responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#dt_administrador'), breakpointDefinition);
+                responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#dt_punto'), breakpointDefinition);
             }
         },
         rowCallback: function (nRow) {
@@ -93,18 +93,20 @@ function initTablaAdministradores() {
                 sortDescending: ": Activar para ordenar la columna de manera descendente"
             }
         },
-        data: dataAdministradores,
+        data: dataPuntos,
         columns: [{
             data: "nombre"
         }, {
-            data: "login"
+            data: "bloque"
         }, {
-            data: "email"
+            data: "edificio"
         }, {
-            data: "administradorId",
+            data: "cota"
+        }, {
+            data: "puntoId",
             render: function (data, type, row) {
-                var bt1 = "<button class='btn btn-circle btn-danger btn-lg' onclick='deleteAdministrador(" + data + ");' title='Eliminar registro'> <i class='fa fa-trash-o fa-fw'></i> </button>";
-                var bt2 = "<button class='btn btn-circle btn-success btn-lg' onclick='editAdministrador(" + data + ");' title='Editar registro'> <i class='fa fa-edit fa-fw'></i> </button>";
+                var bt1 = "<button class='btn btn-circle btn-danger btn-lg' onclick='deletePunto(" + data + ");' title='Eliminar registro'> <i class='fa fa-trash-o fa-fw'></i> </button>";
+                var bt2 = "<button class='btn btn-circle btn-success btn-lg' onclick='editPunto(" + data + ");' title='Editar registro'> <i class='fa fa-edit fa-fw'></i> </button>";
                 var html = "<div class='pull-right'>" + bt1 + " " + bt2 + "</div>";
                 return html;
             }
@@ -132,20 +134,20 @@ function datosOK() {
     return $('#frmBuscar').valid();
 }
 
-function loadTablaAdministradores(data) {
-    var dt = $('#dt_administrador').dataTable();
+function loadTablaPuntos(data) {
+    var dt = $('#dt_punto').dataTable();
     if (data !== null && data.length === 0) {
         mostrarMensajeSmart('No se han encontrado registros');
-        $("#tbAdministrador").hide();
+        $("#tbPunto").hide();
     } else {
         dt.fnClearTable();
         dt.fnAddData(data);
         dt.fnDraw();
-        $("#tbAdministrador").show();
+        $("#tbPunto").show();
     }
 }
 
-function buscarAdministradores() {
+function buscarPuntos() {
     var mf = function () {
         if (!datosOK()) {
             return;
@@ -155,12 +157,12 @@ function buscarAdministradores() {
         // enviar la consulta por la red (AJAX)
         $.ajax({
             type: "GET",
-            url: myconfig.apiUrl + "/api/administradores/?nombre=" + aBuscar,
+            url: myconfig.apiUrl + "/api/puntos/?nombre=" + aBuscar,
             dataType: "json",
             contentType: "application/json",
             success: function (data, status) {
                 // hay que mostrarlo en la zona de datos
-                loadTablaAdministradores(data);
+                loadTablaPuntos(data);
             },
             error: errorAjax
         });
@@ -168,15 +170,15 @@ function buscarAdministradores() {
     return mf;
 }
 
-function crearAdministrador() {
+function crearPunto() {
     var mf = function () {
-        var url = "AdministradorDetalle.html?AdministradorId=0";
+        var url = "PuntoControlDetalle.html?PuntoId=0";
         window.open(url, '_self');
     };
     return mf;
 }
 
-function deleteAdministrador(id) {
+function deletePunto(id) {
     // mensaje de confirmación
     var mens = "¿Realmente desea borrar este registro?";
     $.SmartMessageBox({
@@ -186,16 +188,16 @@ function deleteAdministrador(id) {
     }, function (ButtonPressed) {
         if (ButtonPressed === "Aceptar") {
             var data = {
-                administradorId: id
+                puntoId: id
             };
             $.ajax({
                 type: "DELETE",
-                url: myconfig.apiUrl + "/api/administradores/" + id,
+                url: myconfig.apiUrl + "/api/puntos/" + id,
                 dataType: "json",
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success: function (data, status) {
-                    var fn = buscarAdministradores();
+                    var fn = buscarPuntos();
                     fn();
                 },
                 error: errorAjax
@@ -207,10 +209,10 @@ function deleteAdministrador(id) {
     });
 }
 
-function editAdministrador(id) {
-    // hay que abrir la página de detalle de administrador
+function editPunto(id) {
+    // hay que abrir la página de detalle de punto
     // pasando en la url ese ID
-    var url = "AdministradorDetalle.html?AdministradorId=" + id;
+    var url = "PuntoControlDetalle.html?PuntoId=" + id;
     window.open(url, '_self');
 }
 

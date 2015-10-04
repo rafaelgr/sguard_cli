@@ -1,8 +1,8 @@
 ﻿/*-------------------------------------------------------------------------- 
-administradorDetalle.js
-Funciones js par la página AdministradorDetalle.html
+puntoDetalle.js
+Funciones js par la página PuntoDetalle.html
 ---------------------------------------------------------------------------*/
-var adminId = 0; 
+var puntId = 0; 
 function initForm() {
     comprobarLogin();
     // de smart admin
@@ -14,19 +14,19 @@ function initForm() {
     // asignación de eventos al clic
     $("#btnAceptar").click(aceptar());
     $("#btnSalir").click(salir());
-    $("#frmAdministrador").submit(function () {
+    $("#frmPunto").submit(function () {
         return false;
     });
 
-    adminId = gup('AdministradorId');
-    if (adminId != 0) {
+    puntId = gup('PuntoId');
+    if (puntId != 0) {
         var data = {
-            administradorId: adminId
+            puntoId: puntId
         }
         // hay que buscar ese elemento en concreto
         $.ajax({
             type: "GET",
-            url: myconfig.apiUrl + "/api/administradores/" + adminId,
+            url: myconfig.apiUrl + "/api/puntos/" + puntId,
             dataType: "json",
             contentType: "application/json",
             data: JSON.stringify(data),
@@ -38,60 +38,48 @@ function initForm() {
         });
     } else {
         // se trata de un alta ponemos el id a cero para indicarlo.
-        vm.administradorId(0);
+        vm.puntoId(0);
     }
 }
 
 function admData() {
     var self = this;
-    self.administradorId = ko.observable();
+    self.puntoId = ko.observable();
     self.nombre = ko.observable();
-    self.login = ko.observable();
-    self.password = ko.observable();
-    self.email = ko.observable();
+    self.tag = ko.observable();
+    self.bloque = ko.observable();
+    self.edificio = ko.observable();
+    self.cota = ko.observable();
+    self.observaciones = ko.observable();
 }
 
 function loadData(data) {
-    vm.administradorId(data.administradorId);
+    vm.puntoId(data.puntoId);
     vm.nombre(data.nombre);
-    vm.login(data.login);
-    vm.password(data.password);
-    vm.email(data.email);
+    vm.tag(data.tag);
+    vm.bloque(data.bloque);
+    vm.edificio(data.edificio);
+    vm.cota(data.cota);
+    vm.observaciones(data.observaciones);
 }
 
 function datosOK() {
-    // antes de la validación de form hay que verificar las password
-    if ($('#txtPassword1').val() !== "") {
-        // si ha puesto algo, debe coincidir con el otro campo
-        if ($('#txtPassword1').val() !== $('#txtPassword2').val()) {
-            mostrarMensajeSmart('Las contraseñas no coinciden');
-            return false;
-        }
-        vm.password($("#txtPassword1").val());
-    } 
-    // controlamos que si es un alta debe dar una contraseña.
-    if (vm.administradorId() === 0 && $('#txtPassword1').val() === ""){
-        mostrarMensajeSmart('Debe introducir una contraseña en el alta');
-        return false;
-    }
-    $('#frmAdministrador').validate({
+    $('#frmPunto').validate({
         rules: {
             txtNombre: { required: true },
-            txtLogin: { required: true },
-            txtEmail: { required: true, email:true }
+            txtTag: { required: true }
         },
         // Messages for form validation
         messages: {
             txtNombre: {required: 'Introduzca el nombre'},
-            txtLogin: {required: 'Introduzca el login'},
-            txtEmail: {required: 'Introduzca el correo', email: 'Debe usar un correo válido'}
+            txtTag: {required: 'Introduzca el login'}
         },
         // Do not change code below
         errorPlacement: function (error, element) {
             error.insertAfter(element.parent());
         }
     });
-    return $('#frmAdministrador').valid();
+    return $('#frmPunto').valid();
 }
 
 function aceptar() {
@@ -99,18 +87,20 @@ function aceptar() {
         if (!datosOK())
             return;
         var data = {
-            administrador: {
-                "administradorId": vm.administradorId(),
-                "login": vm.login(),
-                "email": vm.email(),
+            punto: {
+                "puntoId": vm.puntoId(),
                 "nombre": vm.nombre(),
-                "password": vm.password()
+                "tag": vm.tag(),
+                "bloque": vm.bloque(),
+                "edificio": vm.edificio(),
+                "cota": vm.cota(),
+                "observaciones": vm.observaciones()
             }
         };
-        if (adminId == 0) {
+        if (puntId == 0) {
             $.ajax({
                 type: "POST",
-                url: myconfig.apiUrl + "/api/administradores",
+                url: myconfig.apiUrl + "/api/puntos",
                 dataType: "json",
                 contentType: "application/json",
                 data: JSON.stringify(data),
@@ -118,7 +108,7 @@ function aceptar() {
                     // hay que mostrarlo en la zona de datos
                     loadData(data);
                     // Nos volvemos al general
-                    var url = "AdministradorGeneral.html?AdministradorId=" + vm.administradorId();
+                    var url = "PuntoControlGeneral.html?PuntoId=" + vm.puntoId();
                     window.open(url, '_self');
                 },
                 error: errorAjax
@@ -126,7 +116,7 @@ function aceptar() {
         } else {
             $.ajax({
                 type: "PUT",
-                url: myconfig.apiUrl + "/api/administradores/" + adminId,
+                url: myconfig.apiUrl + "/api/puntos/" + puntId,
                 dataType: "json",
                 contentType: "application/json",
                 data: JSON.stringify(data),
@@ -134,7 +124,7 @@ function aceptar() {
                     // hay que mostrarlo en la zona de datos
                     loadData(data);
                     // Nos volvemos al general
-                    var url = "AdministradorGeneral.html?AdministradorId=" + vm.administradorId();
+                    var url = "PuntoControlGeneral.html?PuntoId=" + vm.puntoId();
                     window.open(url, '_self');
                 },
                 error: errorAjax
@@ -146,7 +136,7 @@ function aceptar() {
 
 function salir() {
     var mf = function () {
-        var url = "AdministradorGeneral.html";
+        var url = "PuntoControlGeneral.html";
         window.open(url, '_self');
     }
     return mf;

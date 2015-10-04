@@ -262,7 +262,7 @@
             <ol class="breadcrumb">
                 <li>Inicio</li>
                 <li>Utilidades</li>
-                <li>Leer numero terminal</li>
+                <li>Borrar datos terminal</li>
             </ol>
             <!-- end breadcrumb -->
             <!-- You can also add more buttons to the
@@ -281,12 +281,12 @@
         <div id="content" style="padding:10px;">
             <div class="row">
                 <div class="col-md-12">
-                    <h2><i class="fa fa-lg fa-fw fa-gears"></i>Leer registros del terminal</h2>
+                    <h2><i class="fa fa-lg fa-fw fa-gears"></i>Borrar datos terminal</h2>
                 </div>
             </div>
             <div class="row">
                 <div class="well">
-                    <form id="frmLeerDatos" class="smart-form">
+                    <form id="frmLeerNum" class="smart-form">
                         <header>
                             Haga clic en el botón para lanzar mensaje al terminal
                         </header>
@@ -295,14 +295,14 @@
                                 <section class="col col-md-12">
                                     <label class="label">Respuesta del terminal </label>
                                     <label class="textarea textarea-resizable">
-                                        <textarea id="txtRespuesta" rows="20" class="custom-scroll"></textarea>
+                                        <textarea id="txtRespuesta" rows="3" class="custom-scroll"></textarea>
                                     </label>
                                 </section>
                             </div>
                         </fieldset>
                         <fieldset>
                             <div class="pull-right">
-                                <button id="btnAceptar" title="Enviar mensaje a terminal" class="btn btn-success btn-circle btn-lg">
+                                <button id="btnAceptar" title="Enviar mensaje a terminal" class="btn btn-danger btn-circle btn-lg">
                                     <i class="fa fa-lg fa-cog"></i>
                                 </button>
                             </div>
@@ -373,7 +373,7 @@
         <script src="..."></script>-->
     <script src="myconfig.js"></script>
     <script src="js/ariadna/comun.js"></script>
-    <script src="js/ariadna/TermLeerDatos.js"></script>
+    <script src="js/ariadna/termBorrarDatos.js"></script>
     <!-- PAGE RELATED PLUGIN(S) -->
     <script src="js/plugin/datatables/jquery.dataTables.min.js"></script>
     <script src="js/plugin/datatables/dataTables.colVis.min.js"></script>

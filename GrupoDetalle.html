@@ -2,7 +2,7 @@
 <html lang="en-us">
     <head>
         <meta charset="utf-8">
-        <title> Falck-SCI (Control de rondas) </title>
+        <title>  Falck-SCI (Control de rondas) </title>
         <meta name="description" content="">
         <meta name="author" content="">
 
@@ -137,7 +137,7 @@
                 <!-- fullscreen button -->
                 <div id="fullscreen" class="btn-header transparent pull-right">
                     <span>
-                        <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen">
+                        <a href="javascript:void(0);" data-action="launchFullscreen" title="Pantalla completa">
                             <i class="fa fa-arrows-alt"></i>
                         </a>
                     </span>
@@ -266,8 +266,9 @@
                 <!-- breadcrumb -->
                 <ol class="breadcrumb">
                     <li>Inicio</li>
-                    <li>Administración</li>
-                    <li>Rondas</li>
+                    <li>Administracion</li>
+                    <li>Grupos</li>
+                    <li>Detalle grupo</li>
                 </ol>
                 <!-- end breadcrumb -->
 
@@ -296,8 +297,8 @@
                         <h1 class="page-title txt-color-blueDark">
 
                             <!-- PAGE HEADER -->
-                            <i class="fa-fw fa fa-sitemap"></i>
-                            Rondas <a href="#" title="Ayuda"><i class="fa fa-question"></i></a>
+                            <i class="fa-fw fa fa-cubes"></i>
+                            Detalle grupo <a href="#" title="Ayuda"><i class="fa fa-question"></i></a>
                         </h1>
                     </div>
                     <!-- end col -->
@@ -357,7 +358,7 @@
                                 -->
                                 <header>
                                     <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-                                    <h2>Mantenimiento rondas </h2>
+                                    <h2>Mantenimiento grupos </h2>
 
                                 </header>
 
@@ -374,45 +375,31 @@
                                     <!-- widget content -->
                                     <div class="widget-body">
                                         <!-- this is what the user will see -->
-                                        <form id="frmBuscar" class="smart-form">
+                                        <form id="frmGrupo" class="smart-form">
                                             <header>
-                                                Buscar rondas por nombre.
+                                                Datos del grupo.
                                             </header>
                                             <fieldset>
                                                 <div class="row">
                                                     <section class="col col-md-12">
-                                                        <label class="label">Introduzca el texto a buscar (* = Ver todos)</label>
+                                                        <label class="label">Nombre</label>
                                                         <label class="input">
-                                                            <input id="txtBuscar" name="txtBuscar" type="text" />
+                                                            <input id="txtNombre" name="txtNombre" type="text" data-bind="value: nombre" />
                                                         </label>
                                                     </section>
                                                 </div>
-                                            </fieldset>                                            
+                                            </fieldset>
                                             <fieldset>
                                                 <div class="pull-right">
-                                                    <button id="btnBuscar" title="Buscar" class="btn btn-primary btn-circle btn-lg">
-                                                        <i class="fa fa-lg fa-search"></i>
+                                                    <button id="btnSalir" title="Salir sin guardar" class="btn btn-warning btn-circle btn-lg">
+                                                        <i class="fa fa-lg fa-sign-out"></i>
                                                     </button>
-                                                    <button id="btnAlta" title="Crear nuevo registro" class="btn btn-success btn-circle btn-lg">
-                                                        <i class="fa fa-lg fa-plus"></i>
+                                                    <button id="btnAceptar" title="Guardar y salir" class="btn btn-success btn-circle btn-lg">
+                                                        <i class="fa fa-lg fa-check"></i>
                                                     </button>
                                                 </div>
                                             </fieldset>
                                         </form>
-                                        <div id="tbRonda" style="display:none;">
-                                            <table id="dt_ronda" class="table table-striped table-bordered table-hover" width="100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th data-class="expand">
-                                                            <i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Nombre
-                                                        </th>
-                                                        <th>
-
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
                                     </div>
                                     <!-- end widget content -->
 
@@ -441,7 +428,7 @@
         <div class="page-footer">
             <div class="row">
                 <div class="col-xs-12 col-sm-6">
-                    <span class="txt-color-white">Falck-SCI <span id="versionFooter">NO VERSION</span> <span class="hidden-xs"> - Control de rondas</span> © Ariadna Software S.L. 2015-2016</span>
+                    <span class="txt-color-white">Falck-SCI <span id="versionFooter">1.0</span> <span class="hidden-xs"> - Control de rondas</span> © Ariadna Software S.L. 2015-2016</span>
                 </div>
 
                 <div class="col-xs-6 col-sm-6 text-right hidden-xs">
@@ -532,11 +519,14 @@
         <script src="js/smart-chat-ui/smart.chat.ui.min.js"></script>
         <script src="js/smart-chat-ui/smart.chat.manager.min.js"></script>
 
+        <!--- KNOCKOUT JS -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+
         <!-- PAGE RELATED PLUGIN(S) 
         <script src="..."></script>-->
-        <script src="js/ariadna/comun.js"></script>
         <script src="myconfig.js"></script>
-        <script src="js/ariadna/rondaGeneral.js"></script>
+        <script src="js/ariadna/grupoDetalle.js"></script>
+        <script src="js/ariadna/comun.js"></script>
 
         <!-- PAGE RELATED PLUGIN(S) -->
         <script src="js/plugin/datatables/jquery.dataTables.min.js"></script>

@@ -28,6 +28,10 @@ function initForm() {
     $("#btnAceptar").click(aceptar());
     $("#btnSalir").click(salir());
     $("#btnAgregar").click(agregarPunto());
+
+    $("#btnTag").click(tag());
+    $("#btnTagf").click(tagf());
+
     $("#frmRonda").submit(function() {
         return false;
     });
@@ -35,11 +39,15 @@ function initForm() {
         return false;
     });
 
+    $("#cmbGrupos").change(cambioGrupo());
+    $("#cmbEdificios").change(cambioEdificio());
+
     // prepara validación del form
     prepareValidateRondaPuntos();
 
-    // cargar combo de posibles puntos
-    loadPosiblesPuntos();
+
+    //
+    loadPosiblesGrupos();
 
     // inicializar la tabla asociada.
     initTablaPuntos();
@@ -75,9 +83,16 @@ function admData() {
     self.rondaId = ko.observable();
     self.nombre = ko.observable();
     self.puntos = ko.observableArray([]);
+    self.tag = ko.observable();
+    self.tagf = ko.observable();
     // -- soporte combos
     self.posiblesPuntos = ko.observableArray();
     self.punto = ko.observable();
+    self.posiblesGrupos = ko.observableArray([]);
+    self.grupo = ko.observable();
+    self.posiblesEdificios = ko.observableArray([]);
+    self.edificio = ko.observable();
+
     // -- del from de punto
     self.orden = ko.observable();
 }
@@ -86,21 +101,113 @@ function loadData(data) {
     vm.rondaId(data.rondaId);
     vm.nombre(data.nombre);
     vm.puntos(data.puntos);
+    vm.tag(data.tag);
+    vm.tagf(data.tagf);
     loadTablaPuntos(data.puntos);
 }
 
-function loadPosiblesPuntos() {
+function loadPosiblesPuntos(id, edificioId) {
+    if (edificioId) {
+        $.ajax({
+            type: "GET",
+            url: myconfig.apiUrl + "/api/puntos/edificios/" + edificioId,
+            dataType: "json",
+            contentType: "application/json",
+            success: function(data, status) {
+                // hay que mostrarlo en la zona de datos
+                vm.posiblesPuntos(data);
+            },
+            error: errorAjax
+        });
+    } else {
+        $.ajax({
+            type: "GET",
+            url: myconfig.apiUrl + "/api/puntos",
+            dataType: "json",
+            contentType: "application/json",
+            success: function(data, status) {
+                // hay que mostrarlo en la zona de datos
+                vm.posiblesPuntos(data);
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].puntoId == id) {
+                        vm.punto(data[i]);
+                    }
+                }
+            },
+            error: errorAjax
+        });
+    }
+}
+
+function loadPosiblesGrupos(id) {
     $.ajax({
         type: "GET",
-        url: myconfig.apiUrl + "/api/puntos",
+        url: myconfig.apiUrl + "/api/grupos",
         dataType: "json",
         contentType: "application/json",
         success: function(data, status) {
             // hay que mostrarlo en la zona de datos
-            vm.posiblesPuntos(data);
+            vm.posiblesGrupos(data);
+            if (id) {
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].grupoId == id) {
+                        vm.grupo(data[i]);
+                    }
+                }
+            }
         },
+
         error: errorAjax
     });
+}
+
+function loadPosiblesEdificios(id, grupoId) {
+    if (grupoId) {
+        $.ajax({
+            type: "GET",
+            url: myconfig.apiUrl + "/api/edificios/grupos/" + grupoId,
+            dataType: "json",
+            contentType: "application/json",
+            success: function(data, status) {
+                // hay que mostrarlo en la zona de datos
+                vm.posiblesEdificios(data);
+            },
+            error: errorAjax
+        });
+    } else {
+        $.ajax({
+            type: "GET",
+            url: myconfig.apiUrl + "/api/edificios",
+            dataType: "json",
+            contentType: "application/json",
+            success: function(data, status) {
+                // hay que mostrarlo en la zona de datos
+                vm.posiblesEdificios(data);
+                if (id) {
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].edificioId == id) {
+                            vm.edificio(data[i]);
+                        }
+                    }
+                }
+            },
+            error: errorAjax
+        });
+    }
+}
+
+function cambioGrupo() {
+    var mf = function() {
+        loadPosiblesEdificios(0, vm.grupo().grupoId);
+    }
+    return mf;
+}
+
+function cambioEdificio() {
+    var mf = function() {
+        loadPosiblesPuntos(0, vm.edificio().edificioId);
+    }
+    return mf;
 }
 
 function prepareValidateRondaPuntos() {
@@ -268,7 +375,9 @@ function aceptar() {
         var data = {
             ronda: {
                 "rondaId": vm.rondaId(),
-                "nombre": vm.nombre()
+                "nombre": vm.nombre(),
+                "tag": vm.tag(),
+                "tagf": vm.tagf()
             }
         };
         if (rondId == 0) {
@@ -334,7 +443,6 @@ function agregarPunto() {
                 refrescarTablaPuntos(vm.rondaId());
                 // limpiar los campos
                 vm.orden(null);
-                vm.punto(null);
             },
             error: errorAjax
         });
@@ -354,4 +462,91 @@ function refrescarTablaPuntos(id) {
         },
         error: errorAjax
     });
+}
+
+function tag() {
+    var mf = function() {
+        var mens = "Para la leer la etiqueta con el terminal, páselo por él hasta que la luz parpadee, luego pulse 'ACEPTAR'.";
+        mens += "<br/> IMPORTANTE: Este proceso borra los datos en el terminal, si tiene rondas pendientes descárgelas antes.";
+
+        $.SmartMessageBox({
+            title: "<i class='fa fa-info'></i> Mensaje",
+            content: mens,
+            buttons: '[Aceptar][Cancelar]'
+        }, function(ButtonPressed) {
+            if (ButtonPressed === "Aceptar") {
+                $("#btnTag").addClass('fa-spin');
+                $.ajax({
+                    type: "GET",
+                    url: myconfig.apiUrl + "/api/terminal/records",
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function(data, status) {
+                        if (data.length == 0) {
+                            mostrarMensajeSmart('No hay datos para leer');
+                            $("#btnTag").removeClass('fa-spin');
+                        } else {
+                            var lectura = data[data.length - 1];
+                            vm.tag(lectura.tag);
+                            $("#btnTag").removeClass('fa-spin');
+                            $.ajax({
+                                type: "DELETE",
+                                url: myconfig.apiUrl + "/api/terminal/records",
+                                dataType: "json",
+                                contentType: "application/json",
+                                success: function(data, status) {},
+                                error: errorAjax
+                            });
+                        }
+                    },
+                    error: errorAjax
+                });
+            }
+        });
+    }
+    return mf;
+}
+
+
+function tagf() {
+    var mf = function() {
+        var mens = "Para la leer la etiqueta con el terminal, páselo por él hasta que la luz parpadee, luego pulse 'ACEPTAR'.";
+        mens += "<br/> IMPORTANTE: Este proceso borra los datos en el terminal, si tiene rondas pendientes descárgelas antes.";
+
+        $.SmartMessageBox({
+            title: "<i class='fa fa-info'></i> Mensaje",
+            content: mens,
+            buttons: '[Aceptar][Cancelar]'
+        }, function(ButtonPressed) {
+            if (ButtonPressed === "Aceptar") {
+                $("#btnTagf").addClass('fa-spin');
+                $.ajax({
+                    type: "GET",
+                    url: myconfig.apiUrl + "/api/terminal/records",
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function(data, status) {
+                        if (data.length == 0) {
+                            mostrarMensajeSmart('No hay datos para leer');
+                            $("#btnTagf").removeClass('fa-spin');
+                        } else {
+                            var lectura = data[data.length - 1];
+                            vm.tagf(lectura.tag);
+                            $("#btnTagf").removeClass('fa-spin');
+                            $.ajax({
+                                type: "DELETE",
+                                url: myconfig.apiUrl + "/api/terminal/records",
+                                dataType: "json",
+                                contentType: "application/json",
+                                success: function(data, status) {},
+                                error: errorAjax
+                            });
+                        }
+                    },
+                    error: errorAjax
+                });
+            }
+        });
+    }
+    return mf;
 }

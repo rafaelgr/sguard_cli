@@ -97,11 +97,9 @@ function initTablaPuntos() {
         columns: [{
             data: "nombre"
         }, {
-            data: "bloque"
+            data: "enombre"
         }, {
-            data: "edificio"
-        }, {
-            data: "cota"
+            data: "gnombre"
         }, {
             data: "puntoId",
             render: function (data, type, row) {

@@ -177,7 +177,7 @@
                             <a href="EdificioGeneral.html">
                                 <i class="fa fa-cube"></i> Edificios
                             </a>
-                        </li>                        
+                        </li>
                         <li>
                             <a href="PuntoControlGeneral.html">
                                 <i class="fa fa-square"></i> Puntos Control
@@ -345,10 +345,30 @@
                                         </header>
                                         <fieldset>
                                             <div class="row">
-                                                <section class="col col-md-12">
+                                                <section class="col col-md-8">
                                                     <label class="label">Nombre</label>
                                                     <label class="input">
                                                         <input id="txtNombre" name="txtNombre" type="text" data-bind="value: nombre" />
+                                                    </label>
+                                                </section>
+                                                <section class="col col-md-4">
+                                                    <label class="label">TAG - INICIO</label>
+                                                    <label class="input">
+                                                        <i id="btnTag" class="icon-append fa fa-gear"></i>
+                                                        <input id="txtTag" name="txtLogin" type="text" data-bind="value: tag" />
+                                                        <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Haga clic aquí para leer directamente el tag con el terminal</b>
+                                                    </label>
+                                                </section>
+                                            </div>
+                                            <div class="row">
+                                                <section class="col col-md-8">
+                                                </section>
+                                                <section class="col col-md-4">
+                                                    <label class="label">TAG - FINAL</label>
+                                                    <label class="input">
+                                                        <i id="btnTagf" class="icon-append fa fa-gear"></i>
+                                                        <input id="txtTagf" name="txtTagf" type="text" data-bind="value: tagf" />
+                                                        <b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> Haga clic aquí para leer directamente el tag con el terminal</b>
                                                     </label>
                                                 </section>
                                             </div>
@@ -370,6 +390,20 @@
                                                 Datos de los puntos.
                                             </header>
                                             <fieldset>
+                                                <div class="row">
+                                                    <section class="col col-md-6">
+                                                        <label class="label">Grupo</label>
+                                                        <label class="select">
+                                                            <select id="cmbGrupos" name="cmbGrupos" data-bind="options: posiblesGrupos, optionsText: 'nombre', value: grupo, valueAllowUnset: true"></select><i></i>
+                                                        </label>
+                                                    </section>
+                                                    <section class="col col-md-6">
+                                                        <label class="label">Edificio</label>
+                                                        <label class="select">
+                                                            <select id="cmbEdificios" name="cmbEdificios" data-bind="options: posiblesEdificios, optionsText: 'nombre', value: edificio, valueAllowUnset: true"></select><i></i>
+                                                        </label>
+                                                    </section>
+                                                </div>
                                                 <div class="row">
                                                     <section class="col col-md-4">
                                                         <label class="label">Orden</label>

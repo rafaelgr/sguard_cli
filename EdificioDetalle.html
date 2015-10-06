@@ -267,8 +267,8 @@
                 <ol class="breadcrumb">
                     <li>Inicio</li>
                     <li>Administracion</li>
-                    <li>Grupos</li>
-                    <li>Detalle grupo</li>
+                    <li>Edificios</li>
+                    <li>Detalle edificio</li>
                 </ol>
                 <!-- end breadcrumb -->
 
@@ -297,8 +297,8 @@
                         <h1 class="page-title txt-color-blueDark">
 
                             <!-- PAGE HEADER -->
-                            <i class="fa-fw fa fa-cubes"></i>
-                            Detalle grupo <a href="#" title="Ayuda"><i class="fa fa-question"></i></a>
+                            <i class="fa-fw fa fa-cube"></i>
+                            Detalle edificio <a href="#" title="Ayuda"><i class="fa fa-question"></i></a>
                         </h1>
                     </div>
                     <!-- end col -->
@@ -358,7 +358,7 @@
                                 -->
                                 <header>
                                     <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-                                    <h2>Mantenimiento grupos </h2>
+                                    <h2>Mantenimiento edificios </h2>
 
                                 </header>
 
@@ -375,13 +375,19 @@
                                     <!-- widget content -->
                                     <div class="widget-body">
                                         <!-- this is what the user will see -->
-                                        <form id="frmGrupo" class="smart-form">
+                                        <form id="frmEdificio" class="smart-form">
                                             <header>
-                                                Datos del grupo.
+                                                Datos del edificio.
                                             </header>
                                             <fieldset>
                                                 <div class="row">
-                                                    <section class="col col-md-12">
+                                                    <section class="col col-md-4">
+                                                        <label class="label">Grupo</label>
+                                                        <label class="select">
+                                                            <select id="cmbGrupos" name="cmbGrupos" data-bind="options: posiblesGrupos, optionsText: 'nombre', value: grupo, valueAllowUnset: true" style="width: 100%"></select><i></i>
+                                                        </label>
+                                                    </section>                                                
+                                                    <section class="col col-md-8">
                                                         <label class="label">Nombre</label>
                                                         <label class="input">
                                                             <input id="txtNombre" name="txtNombre" type="text" data-bind="value: nombre" />
@@ -525,7 +531,7 @@
         <!-- PAGE RELATED PLUGIN(S) 
         <script src="..."></script>-->
         <script src="myconfig.js"></script>
-        <script src="js/ariadna/grupoDetalle.js"></script>
+        <script src="js/ariadna/edificioDetalle.js"></script>
         <script src="js/ariadna/comun.js"></script>
 
         <!-- PAGE RELATED PLUGIN(S) -->

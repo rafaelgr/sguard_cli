@@ -19,6 +19,9 @@ function initForm() {
         return false;
     });
 
+
+    // cargar combo de posibles grupos
+    loadPosiblesGrupos();
     adminId = gup('EdificioId');
     if (adminId != 0) {
         var data = {
@@ -49,15 +52,45 @@ function admData() {
     self.nombre = ko.observable();
     self.grupo = ko.observable();
     //-- apoyo combos
-    self.posiblesCombos =ko.observableArray();
+    self.posiblesGrupos = ko.observableArray();
 }
 
 function loadData(data) {
     vm.edificioId(data.edificioId);
     vm.nombre(data.nombre);
+    loadPosiblesGrupos(data.grupoId);
 }
 
 function datosOK() {
+    $('#frmEdificio').validate({
+        rules: {
+            cmbGrupos: {
+                required: true
+            },
+            txtNombre: {
+                required: true
+            }
+        },
+        // Messages for form validation
+        messages: {
+            cmbGrupos: {
+                required: 'Elija un edificio'
+            },
+            txtNombre: {
+                required: 'Introduzca el nombre'
+            }
+        },
+        // Do not change code below
+        errorPlacement: function(error, element) {
+            error.insertAfter(element.parent());
+        }
+    });
+    var opciones = $("#frmEdificio").validate().settings;
+    if (vm.grupo()) {
+        opciones.rules.cmbGrupos.required = false;
+    } else {
+        opciones.rules.cmbGrupos.required = true;
+    }
     return $('#frmEdificio').valid();
 }
 
@@ -68,7 +101,8 @@ function aceptar() {
         var data = {
             edificio: {
                 "edificioId": vm.edificioId(),
-                "nombre": vm.nombre()
+                "nombre": vm.nombre(),
+                "grupoId": vm.grupo().grupoId
             }
         };
         if (adminId == 0) {
@@ -114,4 +148,26 @@ function salir() {
         window.open(url, '_self');
     };
     return mf;
+}
+
+function loadPosiblesGrupos(id) {
+    $.ajax({
+        type: "GET",
+        url: myconfig.apiUrl + "/api/grupos",
+        dataType: "json",
+        contentType: "application/json",
+        success: function(data, status) {
+            // hay que mostrarlo en la zona de datos
+            vm.posiblesGrupos(data);
+            if (id) {
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].grupoId == id) {
+                        vm.grupo(data[i]);
+                    }
+                }
+            }
+        },
+
+        error: errorAjax
+    });
 }

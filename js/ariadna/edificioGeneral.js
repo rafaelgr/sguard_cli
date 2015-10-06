@@ -95,6 +95,9 @@ function initTablaEdificios() {
         },
         data: dataEdificios,
         columns: [{
+            data:"gnombre"
+        },
+        {
             data: "nombre"
         }, {
             data: "edificioId",

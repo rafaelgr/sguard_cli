@@ -357,7 +357,7 @@
                                 -->
                                 <header>
                                     <span class="widget-icon"> <i class="fa fa-edit"></i> </span>
-                                    <h2>Mantenimiento grupos </h2>
+                                    <h2>Mantenimiento edificios </h2>
 
                                 </header>
 
@@ -376,7 +376,7 @@
                                         <!-- this is what the user will see -->
                                         <form id="frmBuscar" class="smart-form">
                                             <header>
-                                                Buscar grupos por nombre.
+                                                Buscar edificios por nombre.
                                             </header>
                                             <fieldset>
                                                 <div class="row">
@@ -399,12 +399,15 @@
                                                 </div>
                                             </fieldset>
                                         </form>
-                                        <div id="tbGrupo" style="display:none;">
-                                            <table id="dt_grupo" class="table table-striped table-bordered table-hover" width="100%">
+                                        <div id="tbEdificio" style="display:none;">
+                                            <table id="dt_edificio" class="table table-striped table-bordered table-hover" width="100%">
                                                 <thead>
                                                     <tr>
                                                         <th data-class="expand">
-                                                            <i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Nombre
+                                                            <i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Grupo
+                                                        </th>
+                                                        <th>
+                                                            Edificio
                                                         </th>
                                                         <th>
 
@@ -536,7 +539,7 @@
         <script src="..."></script>-->
         <script src="js/ariadna/comun.js"></script>
         <script src="myconfig.js"></script>
-        <script src="js/ariadna/grupoGeneral.js"></script>
+        <script src="js/ariadna/edificioGeneral.js"></script>
 
         <!-- PAGE RELATED PLUGIN(S) -->
         <script src="js/plugin/datatables/jquery.dataTables.min.js"></script>

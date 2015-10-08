@@ -22,25 +22,41 @@ function initForm() {
     getVersionFooter();
     //
     $('#btnAceptar').click(leerDatos);
-    $('#frmLeerDatos').submit(function () {
+    $('#frmLeerDatos').submit(function() {
         return false
     });
 }
 
 
-var leerDatos = function(){
+var leerDatos = function() {
     var btnAceptar = $('#btnAceptar');
     btnAceptar.addClass('fa-spin');
     $.ajax({
-            type: "GET",
-            url: myconfig.apiUrl + "/api/terminal/records",
-            dataType: "json",
-            contentType: "application/json",
-            success: function (data, status) {
-                $('#txtRespuesta').val(JSON.stringify(data, null,2));
+        type: "GET",
+        url: myconfig.apiUrl + "/api/descargas/leer-terminal",
+        dataType: "json",
+        contentType: "application/json",
+        success: function(data, status) {
+            //$('#txtRespuesta').val(JSON.stringify(data, null,2));
+            if (data) {
                 btnAceptar.removeClass('fa-spin');
-            },
-            error: errorAjax
-        });
-};
+                $.ajax({
+                    type: "GET",
+                    url: myconfig.apiUrl + "/api/descargas/procesar-descarga/" + data.cabecera.descargaId,
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function(data, status) {
+                        $('#txtRespuesta').html(data);
+                        btnAceptar.removeClass('fa-spin');
+                    },
+                    error: errorAjax
+                });
+            }else{
+                $('#txtRespuesta').html("No hay lecturas en el terminal");
+                btnAceptar.removeClass('fa-spin');
+            }
 
+        },
+        error: errorAjax
+    });
+};
